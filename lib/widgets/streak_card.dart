@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
 import '../providers/stats_provider.dart';
 
 class StreakCard extends StatelessWidget {
@@ -25,7 +26,7 @@ class StreakCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$streak gün',
+                  translate('streak.days', {'count': streak}),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: streak > 0
@@ -34,7 +35,7 @@ class StreakCard extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  'Seri',
+                  translate('streak.label'),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),

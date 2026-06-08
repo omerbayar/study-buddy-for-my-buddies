@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../l10n/translations.dart';
 import '../models/subject.dart';
 import '../repositories/study_repository.dart';
 
@@ -57,10 +58,10 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Dersler'),
+          title: Text(translate('subjects.title')),
           actions: [
             IconButton(
-              tooltip: 'Yeni ders ekle (N)',
+              tooltip: translate('subjects.add_tooltip'),
               icon: const Icon(Icons.add),
               onPressed: () => _showAddDialog(context),
             ),
@@ -117,15 +118,16 @@ class _SubjectTile extends StatelessWidget {
             final confirmed = await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: const Text('Dersi sil'),
-                content: Text('"${subject.name}" silinsin mi?'),
+                title: Text(translate('subjects.delete_title')),
+                content: Text(translate(
+                    'subjects.delete_confirm', {'name': subject.name})),
                 actions: [
                   TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                      child: const Text('İptal')),
+                      child: Text(translate('common.cancel'))),
                   TextButton(
                       onPressed: () => Navigator.pop(ctx, true),
-                      child: const Text('Sil')),
+                      child: Text(translate('common.delete'))),
                 ],
               ),
             );
@@ -161,7 +163,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Yeni ders'),
+      title: Text(translate('subjects.dialog_title')),
       content: SizedBox(
         width: 360,
         child: Column(
@@ -171,14 +173,15 @@ class _SubjectDialogState extends State<_SubjectDialog> {
             TextField(
               controller: _nameController,
               autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Ders adı',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: translate('subjects.field_name'),
+                border: const OutlineInputBorder(),
               ),
               onSubmitted: (_) => _save(),
             ),
             const SizedBox(height: 16),
-            const Text('Emoji', style: TextStyle(fontWeight: FontWeight.w500)),
+            Text(translate('subjects.label_emoji'),
+                style: const TextStyle(fontWeight: FontWeight.w500)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -208,7 +211,8 @@ class _SubjectDialogState extends State<_SubjectDialog> {
               }),
             ),
             const SizedBox(height: 16),
-            const Text('Renk', style: TextStyle(fontWeight: FontWeight.w500)),
+            Text(translate('subjects.label_color'),
+                style: const TextStyle(fontWeight: FontWeight.w500)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -247,8 +251,9 @@ class _SubjectDialogState extends State<_SubjectDialog> {
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal')),
-        FilledButton(onPressed: _save, child: const Text('Ekle')),
+            child: Text(translate('common.cancel'))),
+        FilledButton(
+            onPressed: _save, child: Text(translate('common.add'))),
       ],
     );
   }
@@ -279,15 +284,15 @@ class _EmptySubjects extends StatelessWidget {
         children: [
           const Text('📚', style: TextStyle(fontSize: 64)),
           const SizedBox(height: 16),
-          Text('Henüz ders yok',
+          Text(translate('subjects.empty_title'),
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          const Text('N tuşuna bas veya + butonuna dokun'),
+          Text(translate('subjects.empty_hint')),
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: onAdd,
             icon: const Icon(Icons.add),
-            label: const Text('İlk dersi ekle'),
+            label: Text(translate('subjects.add_first')),
           ),
         ],
       ),

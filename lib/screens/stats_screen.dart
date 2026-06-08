@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
 import '../providers/stats_provider.dart';
 import '../repositories/study_repository.dart';
 
@@ -12,7 +13,7 @@ class StatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('İstatistikler')),
+      appBar: AppBar(title: Text(translate('stats.title'))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Center(
@@ -44,11 +45,14 @@ class _WeeklyBarChart extends StatelessWidget {
     final minutes = stats.weeklyMinutes();
     final maxY = minutes.reduce((a, b) => a > b ? a : b).toDouble();
     final now = DateTime.now();
+    final locale = Translations.instance.current.languageCode;
 
     final dayLabels = List.generate(7, (i) {
       final d = now.subtract(Duration(days: 6 - i));
-      return DateFormat('E', 'tr').format(d);
+      return DateFormat('E', locale).format(d);
     });
+
+    final minUnit = translate('stats.minute_unit');
 
     return Card(
       child: Padding(
@@ -56,13 +60,13 @@ class _WeeklyBarChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Son 7 gün',
+            Text(translate('stats.last7days'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             SizedBox(
               height: 200,
               child: maxY == 0
-                  ? const Center(child: Text('Henüz veri yok'))
+                  ? Center(child: Text(translate('stats.no_data')))
                   : BarChart(
                       BarChartData(
                         maxY: maxY + 10,
@@ -93,9 +97,9 @@ class _WeeklyBarChart extends StatelessWidget {
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: 36,
+                              reservedSize: 40,
                               getTitlesWidget: (v, _) => Text(
-                                '${v.toInt()}dk',
+                                '${v.toInt()}$minUnit',
                                 style: const TextStyle(fontSize: 10),
                               ),
                             ),
@@ -136,6 +140,7 @@ class _SubjectPieChart extends StatelessWidget {
     final repo = context.read<StudyRepository>();
     final distribution = stats.subjectMinutesToday();
     final subjects = repo.getSubjects();
+    final minUnit = translate('stats.minute_unit');
 
     if (distribution.isEmpty) return const SizedBox.shrink();
 
@@ -145,7 +150,7 @@ class _SubjectPieChart extends StatelessWidget {
       return PieChartSectionData(
         value: mapEntry.value.toDouble(),
         color: _colors[i % _colors.length],
-        title: '${mapEntry.value}dk',
+        title: '${mapEntry.value}$minUnit',
         radius: 60,
         titleStyle:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -158,7 +163,7 @@ class _SubjectPieChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Bugün ders dağılımı',
+            Text(translate('stats.today_distribution'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             Row(
@@ -225,6 +230,8 @@ class _SummaryStats extends StatelessWidget {
     final allSessions = repo.getSessions();
     final totalMin = allSessions.fold(0, (s, e) => s + e.durationMinutes);
     final streak = stats.streak;
+    final minUnit = translate('stats.minute_unit');
+    final hrUnit = translate('stats.hour_unit');
 
     return Card(
       child: Padding(
@@ -232,23 +239,26 @@ class _SummaryStats extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Genel', style: Theme.of(context).textTheme.titleMedium),
+            Text(translate('stats.general'),
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             _StatRow(
                 icon: '📅',
-                label: 'Bu hafta',
-                value: '${weekMin}dk (${(weekMin / 60).toStringAsFixed(1)}s)'),
+                label: translate('stats.this_week'),
+                value:
+                    '$weekMin$minUnit (${(weekMin / 60).toStringAsFixed(1)}$hrUnit)'),
             _StatRow(
                 icon: '📊',
-                label: 'Toplam',
-                value: '${totalMin}dk (${(totalMin / 60).toStringAsFixed(1)}s)'),
+                label: translate('stats.total'),
+                value:
+                    '$totalMin$minUnit (${(totalMin / 60).toStringAsFixed(1)}$hrUnit)'),
             _StatRow(
                 icon: '🔥',
-                label: 'En uzun seri',
-                value: '$streak gün'),
+                label: translate('stats.longest_streak'),
+                value: translate('streak.days', {'count': streak})),
             _StatRow(
                 icon: '🍅',
-                label: 'Toplam seans',
+                label: translate('stats.total_sessions'),
                 value: '${allSessions.length}'),
           ],
         ),

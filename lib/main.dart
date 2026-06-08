@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'app/theme.dart';
+import 'l10n/translations.dart';
+import 'providers/locale_provider.dart';
 import 'providers/stats_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/timer_provider.dart';
@@ -20,10 +23,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final repo = StudyRepository();
   await StudyRepository.init();
+
+  final localeProvider = LocaleProvider();
+  await localeProvider.loadSaved();
+  await Translations.instance.load(localeProvider.current);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider.value(value: localeProvider),
         Provider<StudyRepository>.value(value: repo),
         ChangeNotifierProvider(create: (_) => StatsProvider(repo)),
         ChangeNotifierProvider(create: (_) => TimerProvider(repo)),
@@ -39,12 +48,20 @@ class StudyBuddyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
     return MaterialApp(
-      title: 'Study Buddy',
+      title: translate('app.title'),
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeProvider.mode,
+      locale: localeProvider.current,
+      supportedLocales: Translations.supported,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: const HomeShell(),
     );
   }
@@ -73,6 +90,7 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<LocaleProvider>();
     return KeyboardListener(
       focusNode: _rootFocus,
       autofocus: true,
@@ -87,7 +105,6 @@ class _HomeShellState extends State<HomeShell> {
           return;
         }
         if (!meta && key == LogicalKeyboardKey.slash) {
-          // let child handle it (notes search)
           return;
         }
         if (!meta && key == LogicalKeyboardKey.question) {
@@ -99,27 +116,27 @@ class _HomeShellState extends State<HomeShell> {
         key: _scaffoldKey,
         destinations: [
           NavDestinationConfig(
-            label: 'Dashboard',
+            label: translate('nav.dashboard'),
             icon: const Icon(Icons.dashboard_outlined),
             body: const DashboardScreen(),
           ),
           NavDestinationConfig(
-            label: 'Dersler',
+            label: translate('nav.subjects'),
             icon: const Icon(Icons.book_outlined),
             body: const SubjectsScreen(),
           ),
           NavDestinationConfig(
-            label: 'Sorular',
+            label: translate('nav.questions'),
             icon: const Icon(Icons.quiz_outlined),
             body: const QuestionsPanel(),
           ),
           NavDestinationConfig(
-            label: 'İstatistik',
+            label: translate('nav.stats'),
             icon: const Icon(Icons.bar_chart_outlined),
             body: const StatsScreen(),
           ),
           NavDestinationConfig(
-            label: 'Notlar',
+            label: translate('nav.notes'),
             icon: const Icon(Icons.notes_outlined),
             body: const NotesScreen(),
           ),

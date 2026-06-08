@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
 import '../providers/timer_provider.dart';
 import '../repositories/study_repository.dart';
 
@@ -37,32 +38,32 @@ class _CommandPaletteState extends State<CommandPalette> {
     _allActions = [
       _PaletteAction(
         icon: Icons.dashboard_outlined,
-        label: 'Dashboard\'a git',
+        label: translate('command_palette.go_dashboard'),
         onTap: () => widget.onNavigate(0),
       ),
       _PaletteAction(
         icon: Icons.book_outlined,
-        label: 'Dersler\'e git',
+        label: translate('command_palette.go_subjects'),
         onTap: () => widget.onNavigate(1),
       ),
       _PaletteAction(
         icon: Icons.quiz_outlined,
-        label: 'Soru Sayacı\'na git',
+        label: translate('command_palette.go_questions'),
         onTap: () => widget.onNavigate(2),
       ),
       _PaletteAction(
         icon: Icons.bar_chart_outlined,
-        label: 'İstatistikler\'e git',
+        label: translate('command_palette.go_stats'),
         onTap: () => widget.onNavigate(3),
       ),
       _PaletteAction(
         icon: Icons.notes_outlined,
-        label: 'Notlar\'a git',
+        label: translate('command_palette.go_notes'),
         onTap: () => widget.onNavigate(4),
       ),
       _PaletteAction(
         icon: Icons.play_arrow,
-        label: 'Timer başlat/durdur',
+        label: translate('command_palette.timer_startstop'),
         onTap: () {
           timer.startPause();
           widget.onNavigate(0);
@@ -70,7 +71,7 @@ class _CommandPaletteState extends State<CommandPalette> {
       ),
       _PaletteAction(
         icon: Icons.replay,
-        label: 'Timer sıfırla',
+        label: translate('command_palette.timer_reset'),
         onTap: () {
           timer.reset();
           widget.onNavigate(0);
@@ -78,7 +79,8 @@ class _CommandPaletteState extends State<CommandPalette> {
       ),
       ...subjects.map((s) => _PaletteAction(
             icon: Icons.book,
-            label: '${s.emoji} ${s.name} seç',
+            label: translate('command_palette.select_subject',
+                {'emoji': s.emoji, 'name': s.name}),
             onTap: () {
               timer.selectSubject(s.id);
               widget.onNavigate(0);
@@ -117,10 +119,10 @@ class _CommandPaletteState extends State<CommandPalette> {
               child: TextField(
                 controller: _controller,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Ne yapmak istiyorsun?',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  hintText: translate('command_palette.hint'),
+                  prefixIcon: const Icon(Icons.search),
+                  border: const OutlineInputBorder(),
                 ),
                 onChanged: (v) => setState(() => _query = v),
               ),
@@ -128,7 +130,8 @@ class _CommandPaletteState extends State<CommandPalette> {
             const Divider(height: 1),
             Expanded(
               child: filtered.isEmpty
-                  ? const Center(child: Text('Sonuç yok'))
+                  ? Center(
+                      child: Text(translate('command_palette.no_results')))
                   : ListView.builder(
                       itemCount: filtered.length,
                       itemBuilder: (context, i) {

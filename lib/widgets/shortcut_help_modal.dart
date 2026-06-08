@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/translations.dart';
+
 class ShortcutHelpModal extends StatelessWidget {
   const ShortcutHelpModal({super.key});
 
@@ -25,7 +27,7 @@ class ShortcutHelpModal extends StatelessWidget {
                 children: [
                   const Text('⌨️', style: TextStyle(fontSize: 24)),
                   const SizedBox(width: 12),
-                  Text('Klavye Kısayolları',
+                  Text(translate('shortcuts.title'),
                       style: Theme.of(context).textTheme.titleLarge),
                   const Spacer(),
                   IconButton(
@@ -36,28 +38,28 @@ class ShortcutHelpModal extends StatelessWidget {
               ),
               const Divider(),
               const SizedBox(height: 8),
-              _Section('Timer', [
-                _Shortcut('Space', 'Başlat / Durdur'),
-                _Shortcut('S', 'Seansı atla'),
-                _Shortcut('R', 'Sıfırla'),
+              _Section(translate('shortcuts.section_timer'), [
+                _Shortcut('Space', translate('shortcuts.start_stop')),
+                _Shortcut('S', translate('shortcuts.skip_session')),
+                _Shortcut('R', translate('shortcuts.reset_timer')),
               ]),
-              _Section('Navigasyon', [
-                _Shortcut('1–9', 'Ders seç (Dashboard)'),
-                _Shortcut('Cmd/Ctrl + K', 'Komut paleti'),
-                _Shortcut('?', 'Bu yardım menüsü'),
+              _Section(translate('shortcuts.section_nav'), [
+                _Shortcut('1–9', translate('shortcuts.select_subject_dash')),
+                _Shortcut('Cmd/Ctrl + K', translate('shortcuts.cmd_palette')),
+                _Shortcut('?', translate('shortcuts.help_menu')),
               ]),
-              _Section('Dersler', [
-                _Shortcut('N', 'Yeni ders ekle'),
+              _Section(translate('shortcuts.section_subjects'), [
+                _Shortcut('N', translate('shortcuts.new_subject')),
               ]),
-              _Section('Soru Sayacı', [
-                _Shortcut('→ / D', 'Doğru'),
-                _Shortcut('← / A', 'Yanlış'),
-                _Shortcut('↓ / X', 'Boş'),
-                _Shortcut('Z', 'Geri al'),
+              _Section(translate('shortcuts.section_questions'), [
+                _Shortcut('→ / D', translate('shortcuts.correct')),
+                _Shortcut('← / A', translate('shortcuts.wrong')),
+                _Shortcut('↓ / X', translate('shortcuts.blank')),
+                _Shortcut('Z', translate('shortcuts.undo')),
               ]),
-              _Section('Notlar', [
-                _Shortcut('/', 'Arama kutusuna odaklan'),
-                _Shortcut('Enter', 'Not gönder'),
+              _Section(translate('shortcuts.section_notes'), [
+                _Shortcut('/', translate('shortcuts.focus_search')),
+                _Shortcut('Enter', translate('shortcuts.send_note')),
               ]),
             ],
           ),

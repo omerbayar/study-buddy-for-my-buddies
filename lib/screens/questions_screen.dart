@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../l10n/translations.dart';
 import '../models/question_log.dart';
 import '../models/subject.dart';
 import '../repositories/study_repository.dart';
@@ -65,7 +66,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Soru Sayacı')),
+        appBar: AppBar(title: Text(translate('questions.title'))),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Center(
@@ -77,9 +78,9 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                   if (subjects.isNotEmpty)
                     DropdownButtonFormField<Subject>(
                       initialValue: _selectedSubject,
-                      decoration: const InputDecoration(
-                        labelText: 'Ders',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: translate('questions.field_subject'),
+                        border: const OutlineInputBorder(),
                       ),
                       items: subjects
                           .map((s) => DropdownMenuItem(
@@ -100,7 +101,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                       child: Column(
                         children: [
                           Text(
-                            'Net: $_net',
+                            translate('questions.net_label', {'net': _net}),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge
@@ -108,7 +109,11 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'D: $_correct  Y: $_wrong  B: $_blank',
+                            translate('questions.counter_detail', {
+                              'correct': _correct,
+                              'wrong': _wrong,
+                              'blank': _blank,
+                            }),
                             style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
@@ -122,7 +127,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                   Row(
                     children: [
                       _CounterButton(
-                        label: 'Doğru',
+                        label: translate('questions.label_correct'),
                         emoji: '✅',
                         count: _correct,
                         color: Colors.green,
@@ -132,7 +137,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                       ),
                       const SizedBox(width: 8),
                       _CounterButton(
-                        label: 'Yanlış',
+                        label: translate('questions.label_wrong'),
                         emoji: '❌',
                         count: _wrong,
                         color: Colors.red,
@@ -142,7 +147,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                       ),
                       const SizedBox(width: 8),
                       _CounterButton(
-                        label: 'Boş',
+                        label: translate('questions.label_blank'),
                         emoji: '⬜',
                         count: _blank,
                         color: Colors.grey,
@@ -154,7 +159,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '→/D: doğru  •  ←/A: yanlış  •  ↓/X: boş  •  Z: geri al',
+                    translate('questions.shortcut_hint'),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -166,7 +171,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: _reset,
-                          child: const Text('Sıfırla'),
+                          child: Text(translate('questions.btn_reset')),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -175,17 +180,18 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
                           onPressed: _selectedSubject == null
                               ? null
                               : () => _save(repo),
-                          child: const Text('Kaydet'),
+                          child: Text(translate('questions.btn_save')),
                         ),
                       ),
                     ],
                   ),
                   if (todayLogs.isNotEmpty) ...[
                     const SizedBox(height: 24),
-                    Text('Bugün',
+                    Text(translate('questions.today_header'),
                         style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
-                    ...todayLogs.map((log) => _LogTile(log: log, subjects: subjects)),
+                    ...todayLogs.map((log) =>
+                        _LogTile(log: log, subjects: subjects)),
                   ],
                 ],
               ),
@@ -227,7 +233,7 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
     _reset();
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Kaydedildi ✓')),
+        SnackBar(content: Text(translate('questions.snack_saved'))),
       );
     }
   }
@@ -297,10 +303,15 @@ class _LogTile extends StatelessWidget {
     return ListTile(
       leading: Text(subject?.emoji ?? '📝',
           style: const TextStyle(fontSize: 24)),
-      title: Text(subject?.name ?? 'Bilinmiyor'),
-      subtitle: Text('D:${log.correct} Y:${log.wrong} B:${log.blank}'),
+      title: Text(subject?.name ??
+          translate('questions.unknown_subject')),
+      subtitle: Text(translate('questions.log_detail', {
+        'correct': log.correct,
+        'wrong': log.wrong,
+        'blank': log.blank,
+      })),
       trailing: Text(
-        'Net: ${log.net}',
+        translate('questions.net_label', {'net': log.net}),
         style: TextStyle(
             fontWeight: FontWeight.bold,
             color: log.net > 0 ? Colors.green : Colors.red),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../l10n/translations.dart';
 import '../models/note.dart';
 import '../repositories/study_repository.dart';
 
@@ -47,14 +48,14 @@ class _NotesScreenState extends State<NotesScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Notlar'),
+          title: Text(translate('notes.title')),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(56),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: SearchBar(
                 controller: _searchController,
-                hintText: 'Ara... (/ tuşu)',
+                hintText: translate('notes.search_hint'),
                 leading: const Icon(Icons.search),
                 onChanged: (v) => setState(() => _searchQuery = v.toLowerCase()),
                 trailing: [
@@ -97,10 +98,14 @@ class _NotesScreenState extends State<NotesScreen> {
                           const SizedBox(height: 12),
                           Text(
                             _searchQuery.isEmpty
-                                ? 'Henüz not yok'
-                                : 'Sonuç bulunamadı',
+                                ? translate('notes.empty_title')
+                                : translate('notes.no_results'),
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
+                          if (_searchQuery.isEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(translate('notes.empty_hint')),
+                          ],
                         ],
                       ),
                     );
@@ -158,8 +163,8 @@ class _NoteInput extends StatelessWidget {
             child: TextField(
               controller: controller,
               focusNode: focusNode,
-              decoration: const InputDecoration(
-                hintText: 'Not ekle... (#tag ile etiketle)',
+              decoration: InputDecoration(
+                hintText: translate('notes.input_hint'),
                 border: InputBorder.none,
               ),
               maxLines: null,
@@ -179,7 +184,8 @@ class _NoteInput extends StatelessWidget {
   Future<void> _save(BuildContext context) async {
     final text = controller.text.trim();
     if (text.isEmpty) return;
-    final tags = RegExp(r'#(\w+)').allMatches(text).map((m) => m.group(1)!).toList();
+    final tags =
+        RegExp(r'#(\w+)').allMatches(text).map((m) => m.group(1)!).toList();
     await repo.saveNote(Note(
       id: const Uuid().v4(),
       content: text,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
+import '../providers/locale_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/timer_provider.dart';
@@ -32,6 +34,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final timer = context.read<TimerProvider>();
     final repo = context.read<StudyRepository>();
     final subjects = repo.getSubjects();
+    context.watch<LocaleProvider>();
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -58,14 +61,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Study Buddy'),
+          title: Text(translate('dashboard.title')),
           actions: [
             _TodayMinutesBadge(),
             const SizedBox(width: 4),
             _ThemeToggleButton(),
+            _LanguageButton(),
             IconButton(
               icon: const Icon(Icons.keyboard_outlined),
-              tooltip: 'Kısayollar (?)',
+              tooltip: translate('dashboard.shortcuts_tooltip'),
               onPressed: () => ShortcutHelpModal.show(context),
             ),
           ],
@@ -128,8 +132,47 @@ class _ThemeToggleButton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return IconButton(
       icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
-      tooltip: isDark ? 'Açık tema' : 'Koyu tema',
+      tooltip: isDark
+          ? translate('dashboard.theme_light')
+          : translate('dashboard.theme_dark'),
       onPressed: provider.toggle,
+    );
+  }
+}
+
+class _LanguageButton extends StatelessWidget {
+  static const _flags = {
+    'tr': '🇹🇷',
+    'en': '🇬🇧',
+    'de': '🇩🇪',
+    'fr': '🇫🇷',
+    'ro': '🇷🇴',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final localeProvider = context.watch<LocaleProvider>();
+    final currentCode = localeProvider.current.languageCode;
+
+    return PopupMenuButton<Locale>(
+      icon: Text(_flags[currentCode] ?? '🌐',
+          style: const TextStyle(fontSize: 20)),
+      tooltip: '',
+      onSelected: (locale) => localeProvider.setLocale(locale),
+      itemBuilder: (_) => Translations.supported.map((locale) {
+        final code = locale.languageCode;
+        return PopupMenuItem<Locale>(
+          value: locale,
+          child: Row(
+            children: [
+              Text(_flags[code] ?? '🌐',
+                  style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Text(translate('lang.$code')),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -139,7 +182,7 @@ class _TodayMinutesBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final minutes = context.watch<StatsProvider>().todayMinutes;
     return Chip(
-      label: Text('${minutes}dk bugün'),
+      label: Text(translate('dashboard.minutes_today', {'minutes': minutes})),
       avatar: const Icon(Icons.access_time, size: 16),
     );
   }
@@ -164,13 +207,14 @@ class _QuestionNetCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$totalNet net',
+                  '$totalNet ${translate('dashboard.net')}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 Text(
-                  '$totalSolved soru',
+                  translate('dashboard.questions_count',
+                      {'count': totalSolved}),
                   style: TextStyle(
                       color:
                           Theme.of(context).colorScheme.onSurfaceVariant),
@@ -198,7 +242,7 @@ class _SubjectQuickSelect extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
-            'Hızlı ders seçimi',
+            translate('dashboard.quick_select'),
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -213,8 +257,7 @@ class _SubjectQuickSelect extends StatelessWidget {
             final selected = timer.activeSubjectId == s.id;
             return InputChip(
               avatar: Text(s.emoji),
-              label: Text(
-                  '${i < 9 ? '${i + 1}. ' : ''}${s.name}'),
+              label: Text('${i < 9 ? '${i + 1}. ' : ''}${s.name}'),
               selected: selected,
               onPressed: () => timer.selectSubject(s.id),
             );
@@ -229,7 +272,7 @@ class _ShortcutHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Space: başlat/durdur  •  S: atla  •  R: sıfırla  •  1-9: ders seç',
+      translate('dashboard.shortcut_hint'),
       textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,

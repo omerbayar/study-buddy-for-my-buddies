@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
 import '../models/subject.dart';
 import '../providers/timer_provider.dart';
 import '../repositories/study_repository.dart';
@@ -20,9 +21,9 @@ class PomodoroWidget extends StatelessWidget {
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
 
     final phaseLabel = switch (timer.phase) {
-      TimerPhase.focus => 'Odak',
-      TimerPhase.shortBreak => 'Kısa Mola',
-      TimerPhase.longBreak => 'Uzun Mola',
+      TimerPhase.focus => translate('pomodoro.phase_focus'),
+      TimerPhase.shortBreak => translate('pomodoro.phase_short_break'),
+      TimerPhase.longBreak => translate('pomodoro.phase_long_break'),
     };
 
     final phaseColor = switch (timer.phase) {
@@ -83,15 +84,14 @@ class PomodoroWidget extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             if (subjects.isNotEmpty) ...[
-              _SubjectSelector(
-                  subjects: subjects, timer: timer),
+              _SubjectSelector(subjects: subjects, timer: timer),
               const SizedBox(height: 16),
             ],
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filledTonal(
-                  tooltip: 'Sıfırla (R)',
+                  tooltip: translate('pomodoro.reset_tooltip'),
                   onPressed: timer.reset,
                   icon: const Icon(Icons.replay),
                 ),
@@ -113,7 +113,7 @@ class PomodoroWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 IconButton.filledTonal(
-                  tooltip: 'Atla (S)',
+                  tooltip: translate('pomodoro.skip_tooltip'),
                   onPressed: timer.skip,
                   icon: const Icon(Icons.skip_next),
                 ),
@@ -136,7 +136,7 @@ class _SubjectSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: timer.activeSubjectId,
-      hint: const Text('Ders seç'),
+      hint: Text(translate('pomodoro.select_subject')),
       isExpanded: true,
       items: subjects
           .map((s) => DropdownMenuItem(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/translations.dart';
 import '../models/daily_goal.dart';
 import '../providers/stats_provider.dart';
 import '../repositories/study_repository.dart';
@@ -17,6 +18,7 @@ class TodayProgressCard extends StatelessWidget {
     final todayMin = stats.todayMinutes;
     final progress = (todayMin / targetMin).clamp(0.0, 1.0);
     final colorScheme = Theme.of(context).colorScheme;
+    final minUnit = translate('today_progress.minute_unit');
 
     return Card(
       child: Padding(
@@ -27,11 +29,11 @@ class TodayProgressCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Bugünkü hedef',
+                Text(translate('today_progress.title'),
                     style: Theme.of(context).textTheme.titleMedium),
                 TextButton.icon(
                   icon: const Icon(Icons.edit, size: 16),
-                  label: const Text('Düzenle'),
+                  label: Text(translate('today_progress.edit_label')),
                   onPressed: () => _editGoal(context, repo, targetMin,
                       goal?.targetQuestions ?? 20),
                 ),
@@ -41,15 +43,16 @@ class TodayProgressCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${todayMin}dk',
+                  '$todayMin$minUnit',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold),
                 ),
-                Text(' / ${targetMin}dk',
+                Text(' / $targetMin$minUnit',
                     style: TextStyle(color: colorScheme.onSurfaceVariant)),
                 const Spacer(),
                 Text(
-                  '${(progress * 100).round()}%',
+                  translate('today_progress.percent',
+                      {'percent': (progress * 100).round()}),
                   style: TextStyle(
                       color: progress >= 1
                           ? Colors.green
@@ -71,12 +74,12 @@ class TodayProgressCard extends StatelessWidget {
             ),
             if (progress >= 1) ...[
               const SizedBox(height: 8),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 16),
-                  SizedBox(width: 4),
-                  Text('Tebrikler! Hedefine ulaştın 🎉',
-                      style: TextStyle(color: Colors.green)),
+                  const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                  const SizedBox(width: 4),
+                  Text(translate('today_progress.congrats'),
+                      style: const TextStyle(color: Colors.green)),
                 ],
               ),
             ],
@@ -97,19 +100,19 @@ class TodayProgressCard extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Günlük hedef'),
+        title: Text(translate('today_progress.dialog_title')),
         content: TextField(
           controller: minCtrl,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Hedef (dakika)',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: translate('today_progress.dialog_field'),
+            border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('İptal')),
+              child: Text(translate('common.cancel'))),
           FilledButton(
             onPressed: () async {
               final min = int.tryParse(minCtrl.text) ?? currentMinutes;
@@ -123,11 +126,10 @@ class TodayProgressCard extends StatelessWidget {
               ));
               if (ctx.mounted) Navigator.pop(ctx);
             },
-            child: const Text('Kaydet'),
+            child: Text(translate('common.save')),
           ),
         ],
       ),
     );
   }
 }
-
