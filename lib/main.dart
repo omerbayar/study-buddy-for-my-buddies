@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'app/theme.dart';
+import 'providers/stats_provider.dart';
 import 'providers/theme_provider.dart';
+import 'repositories/study_repository.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/notes_screen.dart';
 import 'screens/stats_screen.dart';
@@ -11,10 +13,14 @@ import 'widgets/adaptive_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final repo = StudyRepository();
+  await StudyRepository.init();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        Provider<StudyRepository>.value(value: repo),
+        ChangeNotifierProvider(create: (_) => StatsProvider(repo)),
       ],
       child: const StudyBuddyApp(),
     ),
