@@ -8,6 +8,7 @@ import 'providers/timer_provider.dart';
 import 'repositories/study_repository.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/notes_screen.dart';
+import 'screens/questions_screen.dart';
 import 'screens/stats_screen.dart';
 import 'screens/subjects_screen.dart';
 import 'widgets/adaptive_scaffold.dart';
@@ -62,6 +63,11 @@ class HomeShell extends StatelessWidget {
           label: 'Dersler',
           icon: const Icon(Icons.book_outlined),
           body: const SubjectsScreen(),
+        ),
+        NavDestinationConfig(
+          label: 'Sorular',
+          icon: const Icon(Icons.quiz_outlined),
+          body: const QuestionsPanel(),
         ),
         NavDestinationConfig(
           label: 'İstatistik',
