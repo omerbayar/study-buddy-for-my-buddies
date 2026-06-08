@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'app/theme.dart';
 import 'providers/stats_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/timer_provider.dart';
 import 'repositories/study_repository.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/notes_screen.dart';
@@ -21,6 +22,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         Provider<StudyRepository>.value(value: repo),
         ChangeNotifierProvider(create: (_) => StatsProvider(repo)),
+        ChangeNotifierProvider(create: (_) => TimerProvider(repo)),
       ],
       child: const StudyBuddyApp(),
     ),
