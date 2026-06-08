@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/stats_provider.dart';
+import '../providers/theme_provider.dart';
 import '../providers/timer_provider.dart';
 import '../repositories/study_repository.dart';
 import '../widgets/pomodoro_widget.dart';
+import '../widgets/shortcut_help_modal.dart';
 import '../widgets/streak_card.dart';
 import '../widgets/today_progress_card.dart';
 
@@ -59,7 +61,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title: const Text('Study Buddy'),
           actions: [
             _TodayMinutesBadge(),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
+            _ThemeToggleButton(),
+            IconButton(
+              icon: const Icon(Icons.keyboard_outlined),
+              tooltip: 'Kısayollar (?)',
+              onPressed: () => ShortcutHelpModal.show(context),
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -110,6 +118,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
     final idx = keys.indexOf(key);
     return idx >= 0 ? idx + 1 : null;
+  }
+}
+
+class _ThemeToggleButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<ThemeProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return IconButton(
+      icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+      tooltip: isDark ? 'Açık tema' : 'Koyu tema',
+      onPressed: provider.toggle,
+    );
   }
 }
 
