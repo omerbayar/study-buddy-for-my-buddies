@@ -57,15 +57,10 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(translate('subjects.title')),
-          actions: [
-            IconButton(
-              tooltip: translate('subjects.add_tooltip'),
-              icon: const Icon(Icons.add),
-              onPressed: () => _showAddDialog(context),
-            ),
-          ],
+        floatingActionButton: FloatingActionButton(
+          tooltip: translate('subjects.add_tooltip'),
+          onPressed: () => _showAddDialog(context),
+          child: const Icon(Icons.add),
         ),
         body: ValueListenableBuilder(
           valueListenable: _repo.watchSubjects(),

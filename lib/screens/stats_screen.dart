@@ -12,23 +12,20 @@ class StatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(translate('stats.title'))),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _WeeklyBarChart(),
-                SizedBox(height: 16),
-                _SubjectPieChart(),
-                SizedBox(height: 16),
-                _SummaryStats(),
-              ],
-            ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _WeeklyBarChart(),
+              SizedBox(height: 16),
+              _SubjectPieChart(),
+              SizedBox(height: 16),
+              _SummaryStats(),
+            ],
           ),
         ),
       ),

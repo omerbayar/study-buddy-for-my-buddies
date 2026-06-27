@@ -46,88 +46,80 @@ class _NotesScreenState extends State<NotesScreen> {
           setState(() => _searchQuery = '');
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(translate('notes.title')),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(56),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: SearchBar(
-                controller: _searchController,
-                hintText: translate('notes.search_hint'),
-                leading: const Icon(Icons.search),
-                onChanged: (v) => setState(() => _searchQuery = v.toLowerCase()),
-                trailing: [
-                  if (_searchQuery.isNotEmpty)
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => _searchQuery = '');
-                      },
-                    ),
-                ],
-              ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: translate('notes.search_hint'),
+              leading: const Icon(Icons.search),
+              onChanged: (v) => setState(() => _searchQuery = v.toLowerCase()),
+              trailing: [
+                if (_searchQuery.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() => _searchQuery = '');
+                    },
+                  ),
+              ],
             ),
           ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: repo.watchNotes(),
-                builder: (context, box, _) {
-                  final allNotes = repo.getNotes();
-                  final notes = _searchQuery.isEmpty
-                      ? allNotes
-                      : allNotes
-                          .where((n) =>
-                              n.content
-                                  .toLowerCase()
-                                  .contains(_searchQuery) ||
-                              n.tags.any((t) => t.contains(_searchQuery)))
-                          .toList();
+          Expanded(
+            child: ValueListenableBuilder(
+              valueListenable: repo.watchNotes(),
+              builder: (context, box, _) {
+                final allNotes = repo.getNotes();
+                final notes = _searchQuery.isEmpty
+                    ? allNotes
+                    : allNotes
+                        .where((n) =>
+                            n.content
+                                .toLowerCase()
+                                .contains(_searchQuery) ||
+                            n.tags.any((t) => t.contains(_searchQuery)))
+                        .toList();
 
-                  if (notes.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('📝', style: TextStyle(fontSize: 48)),
-                          const SizedBox(height: 12),
-                          Text(
-                            _searchQuery.isEmpty
-                                ? translate('notes.empty_title')
-                                : translate('notes.no_results'),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          if (_searchQuery.isEmpty) ...[
-                            const SizedBox(height: 8),
-                            Text(translate('notes.empty_hint')),
-                          ],
+                if (notes.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('📝', style: TextStyle(fontSize: 48)),
+                        const SizedBox(height: 12),
+                        Text(
+                          _searchQuery.isEmpty
+                              ? translate('notes.empty_title')
+                              : translate('notes.no_results'),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        if (_searchQuery.isEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(translate('notes.empty_hint')),
                         ],
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemCount: notes.length,
-                    itemBuilder: (context, i) =>
-                        _NoteTile(note: notes[i], repo: repo),
+                      ],
+                    ),
                   );
-                },
-              ),
+                }
+
+                return ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  itemCount: notes.length,
+                  itemBuilder: (context, i) =>
+                      _NoteTile(note: notes[i], repo: repo),
+                );
+              },
             ),
-            _NoteInput(
-              controller: _controller,
-              focusNode: _inputFocus,
-              repo: repo,
-            ),
-          ],
-        ),
+          ),
+          _NoteInput(
+            controller: _controller,
+            focusNode: _inputFocus,
+            repo: repo,
+          ),
+        ],
       ),
     );
   }

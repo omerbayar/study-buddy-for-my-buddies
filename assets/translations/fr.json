@@ -6,6 +6,7 @@
   "nav.questions": "Questions",
   "nav.stats": "Statistiques",
   "nav.notes": "Notes",
+  "nav.bullet_list": "Listes",
 
   "lang.tr": "Türkçe",
   "lang.en": "English",
@@ -125,5 +126,22 @@
   "common.cancel": "Annuler",
   "common.save": "Enregistrer",
   "common.delete": "Supprimer",
-  "common.add": "Ajouter"
+  "common.add": "Ajouter",
+
+  "bullet.title": "Listes",
+  "bullet.new_list": "Nouvelle liste",
+  "bullet.list_name": "Nom de la liste",
+  "bullet.use_range": "Utiliser une plage de nombres",
+  "bullet.range_start": "Début",
+  "bullet.range_end": "Fin",
+  "bullet.add_item": "Ajouter un élément...",
+  "bullet.note_placeholder": "Ajouter une note...",
+  "bullet.delete_list": "Supprimer la liste",
+  "bullet.delete_confirm": "Supprimer \"{name}\" ?",
+  "bullet.empty": "Aucune liste pour l'instant",
+  "bullet.empty_list": "La liste est vide",
+  "bullet.items_count": "éléments",
+  "bullet.error_invalid_number": "Veuillez entrer des nombres valides.",
+  "bullet.error_start_gt_end": "Le début ne peut pas être supérieur à la fin.",
+  "bullet.error_range_too_large": "Maximum {max} éléments autorisés dans une plage."
 }

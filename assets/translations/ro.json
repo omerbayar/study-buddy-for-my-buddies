@@ -6,6 +6,7 @@
   "nav.questions": "Întrebări",
   "nav.stats": "Statistici",
   "nav.notes": "Note",
+  "nav.bullet_list": "Liste",
 
   "lang.tr": "Türkçe",
   "lang.en": "English",
@@ -125,5 +126,22 @@
   "common.cancel": "Anulează",
   "common.save": "Salvează",
   "common.delete": "Șterge",
-  "common.add": "Adaugă"
+  "common.add": "Adaugă",
+
+  "bullet.title": "Liste",
+  "bullet.new_list": "Listă nouă",
+  "bullet.list_name": "Numele listei",
+  "bullet.use_range": "Folosește un interval numeric",
+  "bullet.range_start": "Început",
+  "bullet.range_end": "Sfârșit",
+  "bullet.add_item": "Adaugă element...",
+  "bullet.note_placeholder": "Adaugă notă...",
+  "bullet.delete_list": "Șterge lista",
+  "bullet.delete_confirm": "Ștergi \"{name}\"?",
+  "bullet.empty": "Nicio listă încă",
+  "bullet.empty_list": "Lista este goală",
+  "bullet.items_count": "elemente",
+  "bullet.error_invalid_number": "Introduceți numere valide.",
+  "bullet.error_start_gt_end": "Începutul nu poate fi mai mare decât sfârșitul.",
+  "bullet.error_range_too_large": "Maximum {max} elemente permise într-un interval."
 }

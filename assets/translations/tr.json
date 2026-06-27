@@ -6,6 +6,7 @@
   "nav.questions": "Sorular",
   "nav.stats": "İstatistik",
   "nav.notes": "Notlar",
+  "nav.bullet_list": "Listeler",
 
   "lang.tr": "Türkçe",
   "lang.en": "English",
@@ -125,5 +126,22 @@
   "common.cancel": "İptal",
   "common.save": "Kaydet",
   "common.delete": "Sil",
-  "common.add": "Ekle"
+  "common.add": "Ekle",
+
+  "bullet.title": "Listeler",
+  "bullet.new_list": "Yeni liste",
+  "bullet.list_name": "Liste adı",
+  "bullet.use_range": "Sayı aralığı kullan",
+  "bullet.range_start": "Başlangıç",
+  "bullet.range_end": "Bitiş",
+  "bullet.add_item": "Madde ekle...",
+  "bullet.note_placeholder": "Not ekle...",
+  "bullet.delete_list": "Listeyi sil",
+  "bullet.delete_confirm": "\"{name}\" silinsin mi?",
+  "bullet.empty": "Henüz liste yok",
+  "bullet.empty_list": "Liste boş",
+  "bullet.items_count": "madde",
+  "bullet.error_invalid_number": "Lütfen geçerli sayılar girin.",
+  "bullet.error_start_gt_end": "Başlangıç sayısı bitişten büyük olamaz.",
+  "bullet.error_range_too_large": "Maksimum {max} maddelik aralık girilebilir."
 }

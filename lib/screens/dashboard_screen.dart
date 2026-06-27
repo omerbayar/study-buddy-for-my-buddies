@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../l10n/translations.dart';
 import '../providers/locale_provider.dart';
-import '../providers/stats_provider.dart';
-import '../providers/theme_provider.dart';
 import '../providers/timer_provider.dart';
 import '../repositories/study_repository.dart';
 import '../widgets/pomodoro_widget.dart';
@@ -52,6 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           timer.skip();
         } else if (key == LogicalKeyboardKey.keyR) {
           timer.reset();
+        } else if (key == LogicalKeyboardKey.question) {
+          ShortcutHelpModal.show(context);
         } else {
           final digit = _digitFromKey(key);
           if (digit != null && digit > 0 && digit <= subjects.length) {
@@ -59,48 +59,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(translate('dashboard.title')),
-          actions: [
-            _TodayMinutesBadge(),
-            const SizedBox(width: 4),
-            _ThemeToggleButton(),
-            _LanguageButton(),
-            IconButton(
-              icon: const Icon(Icons.keyboard_outlined),
-              tooltip: translate('dashboard.shortcuts_tooltip'),
-              onPressed: () => ShortcutHelpModal.show(context),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(child: StreakCard()),
-                      const SizedBox(width: 12),
-                      Expanded(child: _QuestionNetCard()),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const TodayProgressCard(),
-                  const SizedBox(height: 12),
-                  const PomodoroWidget(),
-                  if (subjects.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    _SubjectQuickSelect(subjects: subjects),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: StreakCard()),
+                    const SizedBox(width: 12),
+                    Expanded(child: _QuestionNetCard()),
                   ],
-                  const SizedBox(height: 24),
-                  _ShortcutHint(),
+                ),
+                const SizedBox(height: 12),
+                const TodayProgressCard(),
+                const SizedBox(height: 12),
+                const PomodoroWidget(),
+                if (subjects.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  _SubjectQuickSelect(subjects: subjects),
                 ],
-              ),
+                const SizedBox(height: 24),
+                _ShortcutHint(),
+              ],
             ),
           ),
         ),
@@ -122,69 +106,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
     final idx = keys.indexOf(key);
     return idx >= 0 ? idx + 1 : null;
-  }
-}
-
-class _ThemeToggleButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final provider = context.watch<ThemeProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return IconButton(
-      icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
-      tooltip: isDark
-          ? translate('dashboard.theme_light')
-          : translate('dashboard.theme_dark'),
-      onPressed: provider.toggle,
-    );
-  }
-}
-
-class _LanguageButton extends StatelessWidget {
-  static const _flags = {
-    'tr': '🇹🇷',
-    'en': '🇬🇧',
-    'de': '🇩🇪',
-    'fr': '🇫🇷',
-    'ro': '🇷🇴',
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    final localeProvider = context.watch<LocaleProvider>();
-    final currentCode = localeProvider.current.languageCode;
-
-    return PopupMenuButton<Locale>(
-      icon: Text(_flags[currentCode] ?? '🌐',
-          style: const TextStyle(fontSize: 20)),
-      tooltip: '',
-      onSelected: (locale) => localeProvider.setLocale(locale),
-      itemBuilder: (_) => Translations.supported.map((locale) {
-        final code = locale.languageCode;
-        return PopupMenuItem<Locale>(
-          value: locale,
-          child: Row(
-            children: [
-              Text(_flags[code] ?? '🌐',
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Text(translate('lang.$code')),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class _TodayMinutesBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final minutes = context.watch<StatsProvider>().todayMinutes;
-    return Chip(
-      label: Text(translate('dashboard.minutes_today', {'minutes': minutes})),
-      avatar: const Icon(Icons.access_time, size: 16),
-    );
   }
 }
 
@@ -213,11 +134,9 @@ class _QuestionNetCard extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  translate('dashboard.questions_count',
-                      {'count': totalSolved}),
+                  translate('dashboard.questions_count', {'count': totalSolved}),
                   style: TextStyle(
-                      color:
-                          Theme.of(context).colorScheme.onSurfaceVariant),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
             ),

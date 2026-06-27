@@ -6,6 +6,7 @@
   "nav.questions": "Questions",
   "nav.stats": "Statistics",
   "nav.notes": "Notes",
+  "nav.bullet_list": "Lists",
 
   "lang.tr": "Türkçe",
   "lang.en": "English",
@@ -125,5 +126,22 @@
   "common.cancel": "Cancel",
   "common.save": "Save",
   "common.delete": "Delete",
-  "common.add": "Add"
+  "common.add": "Add",
+
+  "bullet.title": "Lists",
+  "bullet.new_list": "New list",
+  "bullet.list_name": "List name",
+  "bullet.use_range": "Use number range",
+  "bullet.range_start": "Start",
+  "bullet.range_end": "End",
+  "bullet.add_item": "Add item...",
+  "bullet.note_placeholder": "Add note...",
+  "bullet.delete_list": "Delete list",
+  "bullet.delete_confirm": "Delete \"{name}\"?",
+  "bullet.empty": "No lists yet",
+  "bullet.empty_list": "List is empty",
+  "bullet.items_count": "items",
+  "bullet.error_invalid_number": "Please enter valid numbers.",
+  "bullet.error_start_gt_end": "Start number cannot be greater than end.",
+  "bullet.error_range_too_large": "Maximum {max} items allowed in a range."
 }

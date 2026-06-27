@@ -65,136 +65,133 @@ class _QuestionsPanelState extends State<QuestionsPanel> {
           _undo();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(title: Text(translate('questions.title'))),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (subjects.isNotEmpty)
-                    DropdownButtonFormField<Subject>(
-                      initialValue: _selectedSubject,
-                      decoration: InputDecoration(
-                        labelText: translate('questions.field_subject'),
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: subjects
-                          .map((s) => DropdownMenuItem(
-                                value: s,
-                                child: Row(children: [
-                                  Text(s.emoji),
-                                  const SizedBox(width: 8),
-                                  Text(s.name),
-                                ]),
-                              ))
-                          .toList(),
-                      onChanged: (s) => setState(() => _selectedSubject = s),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (subjects.isNotEmpty)
+                  DropdownButtonFormField<Subject>(
+                    initialValue: _selectedSubject,
+                    decoration: InputDecoration(
+                      labelText: translate('questions.field_subject'),
+                      border: const OutlineInputBorder(),
                     ),
-                  const SizedBox(height: 24),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            translate('questions.net_label', {'net': _net}),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            translate('questions.counter_detail', {
-                              'correct': _correct,
-                              'wrong': _wrong,
-                              'blank': _blank,
-                            }),
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant),
-                          ),
-                        ],
-                      ),
+                    items: subjects
+                        .map((s) => DropdownMenuItem(
+                              value: s,
+                              child: Row(children: [
+                                Text(s.emoji),
+                                const SizedBox(width: 8),
+                                Text(s.name),
+                              ]),
+                            ))
+                        .toList(),
+                    onChanged: (s) => setState(() => _selectedSubject = s),
+                  ),
+                const SizedBox(height: 24),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Text(
+                          translate('questions.net_label', {'net': _net}),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          translate('questions.counter_detail', {
+                            'correct': _correct,
+                            'wrong': _wrong,
+                            'blank': _blank,
+                          }),
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      _CounterButton(
-                        label: translate('questions.label_correct'),
-                        emoji: '✅',
-                        count: _correct,
-                        color: Colors.green,
-                        onTap: () => setState(() => _correct++),
-                        onLongPress: () =>
-                            setState(() => _correct = (_correct - 1).clamp(0, 9999)),
-                      ),
-                      const SizedBox(width: 8),
-                      _CounterButton(
-                        label: translate('questions.label_wrong'),
-                        emoji: '❌',
-                        count: _wrong,
-                        color: Colors.red,
-                        onTap: () => setState(() => _wrong++),
-                        onLongPress: () =>
-                            setState(() => _wrong = (_wrong - 1).clamp(0, 9999)),
-                      ),
-                      const SizedBox(width: 8),
-                      _CounterButton(
-                        label: translate('questions.label_blank'),
-                        emoji: '⬜',
-                        count: _blank,
-                        color: Colors.grey,
-                        onTap: () => setState(() => _blank++),
-                        onLongPress: () =>
-                            setState(() => _blank = (_blank - 1).clamp(0, 9999)),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    translate('questions.shortcut_hint'),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: _reset,
-                          child: Text(translate('questions.btn_reset')),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton(
-                          onPressed: _selectedSubject == null
-                              ? null
-                              : () => _save(repo),
-                          child: Text(translate('questions.btn_save')),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (todayLogs.isNotEmpty) ...[
-                    const SizedBox(height: 24),
-                    Text(translate('questions.today_header'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    ...todayLogs.map((log) =>
-                        _LogTile(log: log, subjects: subjects)),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    _CounterButton(
+                      label: translate('questions.label_correct'),
+                      emoji: '✅',
+                      count: _correct,
+                      color: Colors.green,
+                      onTap: () => setState(() => _correct++),
+                      onLongPress: () =>
+                          setState(() => _correct = (_correct - 1).clamp(0, 9999)),
+                    ),
+                    const SizedBox(width: 8),
+                    _CounterButton(
+                      label: translate('questions.label_wrong'),
+                      emoji: '❌',
+                      count: _wrong,
+                      color: Colors.red,
+                      onTap: () => setState(() => _wrong++),
+                      onLongPress: () =>
+                          setState(() => _wrong = (_wrong - 1).clamp(0, 9999)),
+                    ),
+                    const SizedBox(width: 8),
+                    _CounterButton(
+                      label: translate('questions.label_blank'),
+                      emoji: '⬜',
+                      count: _blank,
+                      color: Colors.grey,
+                      onTap: () => setState(() => _blank++),
+                      onLongPress: () =>
+                          setState(() => _blank = (_blank - 1).clamp(0, 9999)),
+                    ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  translate('questions.shortcut_hint'),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _reset,
+                        child: Text(translate('questions.btn_reset')),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _selectedSubject == null
+                            ? null
+                            : () => _save(repo),
+                        child: Text(translate('questions.btn_save')),
+                      ),
+                    ),
+                  ],
+                ),
+                if (todayLogs.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  Text(translate('questions.today_header'),
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  ...todayLogs.map((log) =>
+                      _LogTile(log: log, subjects: subjects)),
                 ],
-              ),
+              ],
             ),
           ),
         ),

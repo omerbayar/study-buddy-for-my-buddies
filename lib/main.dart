@@ -10,6 +10,7 @@ import 'providers/stats_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/timer_provider.dart';
 import 'repositories/study_repository.dart';
+import 'screens/bullet_list_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/notes_screen.dart';
 import 'screens/questions_screen.dart';
@@ -96,7 +97,8 @@ class _HomeShellState extends State<HomeShell> {
       autofocus: true,
       onKeyEvent: (e) {
         if (e is! KeyDownEvent) return;
-        final meta = HardwareKeyboard.instance.isMetaPressed ||
+        final meta =
+            HardwareKeyboard.instance.isMetaPressed ||
             HardwareKeyboard.instance.isControlPressed;
         final key = e.logicalKey;
 
@@ -139,6 +141,11 @@ class _HomeShellState extends State<HomeShell> {
             label: translate('nav.notes'),
             icon: const Icon(Icons.notes_outlined),
             body: const NotesScreen(),
+          ),
+          NavDestinationConfig(
+            label: translate('nav.bullet_list'),
+            icon: const Icon(Icons.checklist_outlined),
+            body: const BulletListScreen(),
           ),
         ],
       ),

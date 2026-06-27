@@ -6,6 +6,7 @@
   "nav.questions": "Fragen",
   "nav.stats": "Statistiken",
   "nav.notes": "Notizen",
+  "nav.bullet_list": "Listen",
 
   "lang.tr": "Türkçe",
   "lang.en": "English",
@@ -125,5 +126,22 @@
   "common.cancel": "Abbrechen",
   "common.save": "Speichern",
   "common.delete": "Löschen",
-  "common.add": "Hinzufügen"
+  "common.add": "Hinzufügen",
+
+  "bullet.title": "Listen",
+  "bullet.new_list": "Neue Liste",
+  "bullet.list_name": "Listenname",
+  "bullet.use_range": "Zahlenbereich verwenden",
+  "bullet.range_start": "Anfang",
+  "bullet.range_end": "Ende",
+  "bullet.add_item": "Eintrag hinzufügen...",
+  "bullet.note_placeholder": "Notiz hinzufügen...",
+  "bullet.delete_list": "Liste löschen",
+  "bullet.delete_confirm": "\"{name}\" löschen?",
+  "bullet.empty": "Noch keine Listen",
+  "bullet.empty_list": "Liste ist leer",
+  "bullet.items_count": "Einträge",
+  "bullet.error_invalid_number": "Bitte gültige Zahlen eingeben.",
+  "bullet.error_start_gt_end": "Anfang darf nicht größer als Ende sein.",
+  "bullet.error_range_too_large": "Maximal {max} Einträge im Bereich erlaubt."
 }

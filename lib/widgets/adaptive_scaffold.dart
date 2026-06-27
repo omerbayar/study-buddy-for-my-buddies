@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'global_app_bar_actions.dart';
+
 class NavDestinationConfig {
   const NavDestinationConfig({
     required this.label,
@@ -43,12 +45,23 @@ class AdaptiveScaffoldState extends State<AdaptiveScaffold> {
 
   int get currentIndex => _index;
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(widget.destinations[_index].label),
+      actions: const [
+        GlobalAppBarActions(),
+        SizedBox(width: 4),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final useRail = MediaQuery.sizeOf(context).width >= 600;
 
     if (useRail) {
       return Scaffold(
+        appBar: _buildAppBar(),
         body: Row(
           children: [
             NavigationRail(
@@ -70,6 +83,7 @@ class AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     }
 
     return Scaffold(
+      appBar: _buildAppBar(),
       body: widget.destinations[_index].body,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
